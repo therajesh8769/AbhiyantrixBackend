@@ -109,7 +109,8 @@ app.get('/api/registration', async (req, res) => {
     }
   });
 
-app.listen(8080, () => {
-    console.log("listening on port 8080");
-});
+// app.listen(8080, () => {
+//     console.log("listening on port 8080");
+// });
+module.exports = app;
 
