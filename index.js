@@ -32,7 +32,7 @@ async function main() {
 main();
 
 app.use(cors({
-    origin: "*", // Allow requests from your frontend
+    origin: "https://abhiyantrix-frontend.vercel.app/", // Allow requests from your frontend
     methods: ["GET", "POST", "PATCH", "DELETE"], // Include PATCH and DELETE for event operations
     credentials: true               // Include credentials if necessary
 }));
@@ -109,8 +109,8 @@ app.get('/api/registration', async (req, res) => {
     }
   });
 
-// app.listen(8080, () => {
-//     console.log("listening on port 8080");
-// });
-module.exports = app;
+app.listen(8080, () => {
+    console.log("listening on port 8080");
+});
+// module.exports = app;
 
