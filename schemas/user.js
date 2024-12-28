@@ -34,6 +34,14 @@ const userSchema = new Schema({
         required: true,
         unique:true ,
     },
+    selectedEvents: {
+        type: [String],
+        required: true,
+        validate: {
+            validator: (v) => v.length > 0,
+            message: "At least one event must be selected.",
+        },
+    },
 });
 
 module.exports = { userSchema };

@@ -32,7 +32,7 @@ async function main() {
 main();
 
 app.use(cors({
-    origin: ["https://abhiyantrix-frontend.vercel.app",'*'], // Allow requests from your frontend
+    origin: ["https://abhiyantrix-frontend.vercel.app",'*','http://localhost:5173'], // Allow requests from your frontend
     methods: ["GET", "POST", "PATCH", "DELETE"], // Include PATCH and DELETE for event operations
     credentials: true               // Include credentials if necessary
 }));
@@ -60,10 +60,10 @@ app.post("/register", async (req, res) => {
     console.log("Request for new registration received");
 
     // Extracting data from the request body
-    const { TeamName, members, college, email, mobile } = req.body;
+    const { TeamName, members, college, email, mobile, selectedEvents } = req.body;
 
     // Validating input
-    if (!TeamName || !college || !email || !mobile || !members || members.length === 0) {
+    if (!TeamName || !college || !email || !mobile || !members || members.length === 0 || !selectedEvents || selectedEvents.length === 0) {
         return res.status(400).json({ error: "Missing required fields" });
     }
 
@@ -71,12 +71,19 @@ app.post("/register", async (req, res) => {
         return res.status(400).json({ error: "Team cannot have more than 4 members" });
     }
 
+    
+
     try {
         const existingUser = await User.findOne({ $or: [{ email }, { mobile }] });
 
         if (existingUser) {
-            return res.status(400).json({ message: 'Email or mobile already registered' });
+            if (existingUser.email === email) {
+                return res.status(400).json({ message: 'Email already registered' });
+            } else {
+                return res.status(400).json({ message: 'Mobile number already registered' });
+            }
         }
+
         // Creating a new user document
         const newUser = new User({
             TeamName,
@@ -84,6 +91,7 @@ app.post("/register", async (req, res) => {
             college,
             email,
             mobile,
+            selectedEvents
         });
 
         // Saving to the database
@@ -96,9 +104,15 @@ app.post("/register", async (req, res) => {
         });
     } catch (error) {
         console.error("Error during registration:", error);
+        if (error.name === 'ValidationError') {
+            const validationErrors = Object.values(error.errors).map(err => err.message);
+            return res.status(400).json({ error: "Validation failed", details: validationErrors });
+        }
         res.status(500).json({ error: "Server error" });
     }
 });
+
+
 app.get('/api/registration', async (req, res) => {
     try {
       const registrations = await User.find().sort({ createdAt: -1 });
