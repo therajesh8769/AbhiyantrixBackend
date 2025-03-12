@@ -32,7 +32,7 @@ async function main() {
 main();
 
 app.use(cors({
-    origin: ["https://abhiyantrix-one.vercel.app/",'*','https://abhiyantrix-frontend-mhegell8c-rajeshs-projects-837c11be.vercel.app/','https://abhiyantrix.onrender.com/'], // Allow requests from your frontend
+    origin: ["https://abhiyantrix-one.vercel.app",'*','https://abhiyantrix-frontend-mhegell8c-rajeshs-projects-837c11be.vercel.app','https://abhiyantrix.onrender.com/'], // Allow requests from your frontend
     methods: ["GET", "POST", "PATCH", "DELETE"], // Include PATCH and DELETE for event operations
     credentials: true               // Include credentials if necessary
 }));
